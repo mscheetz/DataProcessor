@@ -1,5 +1,14 @@
 import pandas as pd
 
+def expose_schema_from_excel(dfs: dict[str, pd.DataFrame]) -> dict[str, list[str]]:
+    return {
+        sheet_name: df.columns.tolist()
+        for sheet_name, df in dfs.items()
+    }
+
+def expose_schema(df: pd.DataFrame) -> list[str]:
+    return df.columns.tolist()
+
 def query_financials_from_excel(dfs: dict[str, pd.DataFrame], sheet_name: str):
     if sheet_name not in dfs:
         raise Exception(f"Sheet: '{sheet_name}' does not exist")

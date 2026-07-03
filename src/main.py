@@ -1,6 +1,6 @@
 from pathlib import Path
 from extract import extract_csv_tables, extract_pdf_tables, extract_excel_tables
-from query import query_financials, query_financials_from_excel
+from query import query_financials, query_financials_from_excel, expose_schema, expose_schema_from_excel
 import pandas as pd
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -18,17 +18,23 @@ def run_extraction():
         dfs.append(extract_from_excel(csv_file))
 
 def extract_from_csv(path: Path):
-    dataframe = extract_csv_tables(path)
+    df = extract_csv_tables(path)
 
-    query_financials(dataframe);
+    print(f"\n Schema for {path} (Columns):")
+    print(expose_schema(df))
+
+    query_financials(df);
 
 def extract_from_excel(path: Path):
-    dataframes = extract_excel_tables(path)
+    df = extract_excel_tables(path)
 
-    query_financials_from_excel(dataframes, "Finance Monthly");
+    print(f"\n Schema for {path} (Sheet Name: Columns):")
+    print(expose_schema_from_excel(df))
+
+    query_financials_from_excel(df, "Finance Monthly");
 
 def extract_from_pdf(path: Path) -> pd.DataFrame:
-    dataframe = extract_pdf_tables(path)
+    df = extract_pdf_tables(path)
 
     print(f"Extracted from: {path}")
 
