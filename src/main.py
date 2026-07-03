@@ -3,7 +3,8 @@ from extract import extract_csv_tables, extract_pdf_tables
 from query import query_financials
 import pandas as pd
 
-DATA_DIR = "data"
+BASE_DIR = Path(__file__).resolve().parent
+DATA_DIR = BASE_DIR.parent / "data"
 
 def run_extraction():
     dfs = []
