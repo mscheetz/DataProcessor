@@ -1,10 +1,17 @@
 from pathlib import Path
 from extract import extract_csv_tables, extract_pdf_tables, extract_excel_tables
-from query import query_financials, query_financials_from_excel, expose_schema, expose_schema_from_excel
+from query import query_financials, query_financials_from_excel, expose_schema, expose_schema_from_excel, execute_query, execute_query_select_sheet
 import pandas as pd
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR.parent / "data"
+
+SQL_QUERY = """
+SELECT Month, Revenue
+FROM df
+ORDER BY Revenue DESC
+LIMIT 5
+"""
 
 def run_extraction():
     dfs = []
@@ -25,13 +32,19 @@ def extract_from_csv(path: Path):
 
     query_financials(df);
 
+    execute_query(df, SQL_QUERY)
+
 def extract_from_excel(path: Path):
-    df = extract_excel_tables(path)
+    dfs = extract_excel_tables(path)
 
     print(f"\n Schema for {path} (Sheet Name: Columns):")
-    print(expose_schema_from_excel(df))
+    print(expose_schema_from_excel(dfs))
 
-    query_financials_from_excel(df, "Finance Monthly");
+    sheet_name = "Finance Monthly"
+
+    query_financials_from_excel(dfs, sheet_name);
+
+    execute_query_select_sheet(dfs, SQL_QUERY, sheet_name)
 
 def extract_from_pdf(path: Path) -> pd.DataFrame:
     df = extract_pdf_tables(path)

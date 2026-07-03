@@ -1,4 +1,5 @@
 import pandas as pd
+import duckdb
 
 def expose_schema_from_excel(dfs: dict[str, pd.DataFrame]) -> dict[str, list[str]]:
     return {
@@ -27,3 +28,17 @@ def query_financials(df: pd.DataFrame):
 
     print(f"\nTop 5 Months (Revenue):")
     print(top_five)
+
+def execute_query_select_sheet(dfs: dict[str, pd.DataFrame], sql: str, sheet_name: str):
+    if sheet_name not in dfs:
+        raise Exception(f"Sheet: '{sheet_name}' does not exist")
+
+    print(f"\nQuerying on sheet {sheet_name}")
+
+    execute_query(dfs[sheet_name], sql)
+
+def execute_query(df: pd.DataFrame, sql: str):
+    result = duckdb.query(sql).df()
+
+    print(f"\nExecuting query {sql.replace("\n", " ").strip()}:")
+    print(result)
