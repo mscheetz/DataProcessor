@@ -2,6 +2,17 @@ from pathlib import Path
 import pdfplumber
 import pandas as pd
 
+def extract_excel_tables(path: Path) -> dict[str, pd.DataFrame]:
+    if path.suffix.lower() not in [".xlsx", ".xls"]:
+        raise Exception("File is not an Excel file")
+
+    if path.exists() == False:
+        raise FileNotFoundError(f"No file found at '{path}'")
+    
+    dfs = pd.read_excel(path, sheet_name=None)
+
+    return dfs
+
 def extract_pdf_tables(path: Path) -> pd.DataFrame:
     if path.suffix.lower() != ".pdf":
         raise Exception("File is not of type pdf")

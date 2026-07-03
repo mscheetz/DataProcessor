@@ -1,6 +1,6 @@
 from pathlib import Path
-from extract import extract_csv_tables, extract_pdf_tables
-from query import query_financials
+from extract import extract_csv_tables, extract_pdf_tables, extract_excel_tables
+from query import query_financials, query_financials_from_excel
 import pandas as pd
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -14,10 +14,18 @@ def run_extraction():
     for csv_file in Path(DATA_DIR).glob("*.csv"):
         dfs.append(extract_from_csv(csv_file))
 
+    for csv_file in Path(DATA_DIR).glob("*.xlsx"):
+        dfs.append(extract_from_excel(csv_file))
+
 def extract_from_csv(path: Path):
     dataframe = extract_csv_tables(path)
 
     query_financials(dataframe);
+
+def extract_from_excel(path: Path):
+    dataframes = extract_excel_tables(path)
+
+    query_financials_from_excel(dataframes, "Finance Monthly");
 
 def extract_from_pdf(path: Path) -> pd.DataFrame:
     dataframe = extract_pdf_tables(path)
