@@ -14,15 +14,15 @@ LIMIT 5
 """
 
 def run_extraction():
-    dfs = []
-    for pdf_file in Path(DATA_DIR).glob("*.pdf"):
-        dfs.append(extract_from_pdf(pdf_file))
-    
+    dfs = []    
     for csv_file in Path(DATA_DIR).glob("*.csv"):
         dfs.append(extract_from_csv(csv_file))
 
-    for csv_file in Path(DATA_DIR).glob("*.xlsx"):
-        dfs.append(extract_from_excel(csv_file))
+    for excel_file in Path(DATA_DIR).glob("*.xlsx"):
+        dfs.append(extract_from_excel(excel_file))
+
+    for pdf_file in Path(DATA_DIR).glob("*.pdf"):
+        dfs.append(extract_from_pdf(pdf_file))
 
 def extract_from_csv(path: Path):
     df = extract_csv_tables(path)
